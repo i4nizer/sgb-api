@@ -4,6 +4,7 @@ const env = {
 	port: Number(process.env.PORT),
 	host: process.env.HOST || "",
 	protocol: process.env.PROTOCOL || "",
+	multer: { path: process.env.MULTER_PATH || "" },
 	jwt: {
 		secret: process.env.JWT_SECRET || "",
 	},
