@@ -2,6 +2,7 @@ import express from "express"
 import env from "@/config/env.config.js"
 import sequelizeBoot from "@/boot/sequelize.boot.js"
 import apiRoute from "@/routes/api.route.js"
+import adminBoot from "@/boot/admin.boot.js"
 
 //
 
@@ -14,6 +15,7 @@ api.use("/api", apiRoute.router)
 
 // --- Bootstrapping
 await sequelizeBoot.boot()
+await adminBoot.boot()
 
 //
 
