@@ -31,13 +31,13 @@ const post: RequestHandler = async (req, res) => {
 }
 
 const patch: RequestHandler = async (req, res) => {
-    const id = req.params.id as string
-    if (!id) return res.status(400).send("Reading id required.")
+    const rid = req.params.rid as string
+    if (!rid) return res.status(400).send("Reading id required.")
 
     const { data, error, success } = ReadingUpdateSchema.safeParse(req.body)
     if (!success) return res.status(400).send(error.issues.at(0)?.message)
 
-    const reading = await Reading.findByPk(id)
+    const reading = await Reading.findByPk(rid)
     if (!reading) return res.status(404).send("Reading not found.")
 
     await reading.update(data)
@@ -45,10 +45,10 @@ const patch: RequestHandler = async (req, res) => {
 }
 
 const destroy: RequestHandler = async (req, res) => {
-    const id = req.params.id as string
-    if (!id) return res.status(400).send("Reading id required.")
+    const rid = req.params.rid as string
+    if (!rid) return res.status(400).send("Reading id required.")
 
-    const count = await Reading.destroy({ where: { id } })
+    const count = await Reading.destroy({ where: { id: rid } })
     if (count <= 0) return res.status(404).send("Reading not found.")
 
     return res.status(204).send("Reading deleted successfully.")
