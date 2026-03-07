@@ -5,8 +5,10 @@ const env = {
 	host: process.env.HOST || "",
 	protocol: process.env.PROTOCOL || "",
 	multer: { path: process.env.MULTER_PATH || "" },
-	jwt: {
-		secret: process.env.JWT_SECRET || "",
+	jwt: { secret: process.env.JWT_SECRET || "" },
+	supabase: {
+		url: process.env.SUPABASE_URL || "",
+		key: process.env.SUPABASE_KEY || "",
 	},
 	database: {
 		user: process.env.DATABASE_USER || "",
