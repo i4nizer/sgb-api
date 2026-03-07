@@ -1,0 +1,62 @@
+import { Op } from "sequelize"
+import { Detection } from "@/models/detection.model.js"
+import { PaginationSchema } from "@/schemas/pagination.schema.js"
+import { type RequestHandler } from "express"
+import { DetectionCreateSchema, DetectionQuerySchema, DetectionUpdateSchema } from "@/schemas/detection.schema.js"
+
+//
+
+const get: RequestHandler = async (req, res) => {
+    const { data, error, success } = PaginationSchema.and(DetectionQuerySchema).safeParse(req.query)
+    if (!success) return res.status(400).send(error.issues.at(0)?.message)
+
+    const keys = Object.keys(PaginationSchema.shape)
+    const entries = Object.entries(data).filter(([k, v]) => !keys.includes(k) && v != undefined)
+
+    const { alpha, omega, limit, offset } = data
+    const where: any = Object.fromEntries(entries)
+    const createdAt = { ...(alpha && { [Op.gte]: alpha }), ...(omega && { [Op.lte]: omega }) }
+    if (Object.keys(createdAt).length) where.createdAt = createdAt
+
+    const detections = await Detection.findAll({ where, raw: true, limit, offset })
+    res.send(detections)
+}
+
+const post: RequestHandler = async (req, res) => {
+    const cid = req.params.cid as string
+    if (!cid) return res.status(400).send("Capture id required.")
+
+    const { data, error, success } = DetectionCreateSchema.safeParse(req.body)
+    if (!success) return res.status(400).send(error.issues.at(0)?.message)
+
+    const detection = await Detection.create({ ...data, captureId: Number(cid) })
+    res.send(detection.dataValues)
+}
+
+const patch: RequestHandler = async (req, res) => {
+    const did = req.params.did as string
+    if (!did) return res.status(400).send("Detection id required.")
+
+    const { data, error, success } = DetectionUpdateSchema.safeParse(req.body)
+    if (!success) return res.status(400).send(error.issues.at(0)?.message)
+
+    const detection = await Detection.findByPk(did)
+    if (!detection) return res.status(404).send("Detection not found.")
+
+    await detection.update(data)
+    res.send(detection.dataValues)
+}
+
+const destroy: RequestHandler = async (req, res) => {
+    const did = req.params.did as string
+    if (!did) return res.status(400).send("Detection id required.")
+
+    const count = await Detection.destroy({ where: { id: did } })
+    if (count <= 0) return res.status(404).send("Detection not found.")
+
+    return res.status(204).send("Detection deleted successfully.")
+}
+
+//
+
+export default { get, post, patch, destroy }
