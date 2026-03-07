@@ -6,6 +6,13 @@ const env = {
 	protocol: process.env.PROTOCOL || "",
 	multer: { path: process.env.MULTER_PATH || "" },
 	jwt: { secret: process.env.JWT_SECRET || "" },
+	admin: {
+		name: process.env.ADMIN_NAME || "",
+		reset: process.env.ADMIN_RESET === "true",
+		email: process.env.ADMIN_EMAIL || "",
+		phone: process.env.ADMIN_PHONE || "",
+		password: process.env.ADMIN_PASSWORD || "",
+	},
 	supabase: {
 		url: process.env.SUPABASE_URL || "",
 		key: process.env.SUPABASE_KEY || "",
