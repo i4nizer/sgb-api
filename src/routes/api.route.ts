@@ -5,6 +5,7 @@ import adminRoute from "@/routes/admin.route.js"
 import logMiddleware from "@/middlewares/log.middleware.js"
 import jwtMiddleware from "@/middlewares/jwt.middleware.js"
 import captureRoute from "@/routes/capture.route.js"
+import readingRoute from "@/routes/reading.route.js"
 
 //
 
@@ -16,6 +17,7 @@ router.use(logMiddleware.log)
 router.use("/auth", authRoute.router)
 router.use("/admin", jwtMiddleware.requireAuthToken, adminRoute.router)
 router.use("/capture", jwtMiddleware.requireAuthToken, captureRoute.router)
+router.use("/reading", jwtMiddleware.requireAuthToken, readingRoute.router)
 
 //
 
