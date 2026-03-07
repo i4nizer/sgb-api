@@ -1,9 +1,14 @@
 import express from "express"
 import env from "@/config/env.config.js"
+import sequelizeBoot from "@/boot/sequelize.boot.js"
 
 //
 
+// --- Server
 const api = express()
+
+// --- Bootstrapping
+await sequelizeBoot.boot()
 
 //
 
