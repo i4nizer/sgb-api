@@ -1,0 +1,28 @@
+{
+	"name": "sgb-api",
+	"version": "1.0.0",
+	"description": "This the main backend of sgb.",
+	"main": "index.js",
+	"type": "module",
+	"scripts": {
+		"dev": "tsx --env-file .env src/index.ts",
+		"start": "node --env-file .env dist/index.js",
+		"build": "tsc && tsc-alias",
+		"format": "prettier --write ."
+	},
+	"keywords": [],
+	"author": "",
+	"license": "ISC",
+	"dependencies": {
+		"express": "^5.2.1"
+	},
+	"devDependencies": {
+		"@tsconfig/node22": "^22.0.5",
+		"@types/express": "^5.0.6",
+		"@types/node": "^25.3.5",
+		"prettier": "^3.8.1",
+		"tsc-alias": "^1.8.16",
+		"tsx": "^4.21.0",
+		"typescript": "^5.9.3"
+	}
+}
