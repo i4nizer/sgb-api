@@ -4,6 +4,9 @@ const env = {
 	port: Number(process.env.PORT),
 	host: process.env.HOST || "",
 	protocol: process.env.PROTOCOL || "",
+	jwt: {
+		secret: process.env.JWT_SECRET || "",
+	},
 	database: {
 		user: process.env.DATABASE_USER || "",
 		pass: process.env.DATABASE_PASS || "",
