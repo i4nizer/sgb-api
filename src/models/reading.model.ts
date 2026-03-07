@@ -14,7 +14,7 @@ class Reading extends Model<InferAttributes<Reading>, InferCreationAttributes<Re
     declare name: string
     declare unit: string
     declare icon: string
-    declare value: string
+    declare value: number
     declare createdAt: CreationOptional<Date>
     declare updatedAt: CreationOptional<Date>
 }
@@ -40,7 +40,7 @@ const readingAttr: ModelAttributes<Reading, InferAttributes<Reading>> = {
         allowNull: false,
     },
     value: {
-        type: DataTypes.STRING,
+        type: DataTypes.DECIMAL(10, 2),
         allowNull: false,
     },
     createdAt: {
