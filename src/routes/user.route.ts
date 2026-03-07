@@ -7,9 +7,9 @@ import settingsRoute from "@/routes/settings.route.js"
 const router = express.Router()
 router.get("/", userController.get)
 router.post("/", userController.post)
-router.patch("/:uid(\\d+)", userController.patch)
-router.delete("/:uid(\\d+)", userController.destroy)
-router.use("/:uid(\\d+)/settings", settingsRoute.router)
+router.patch("/:uid", userController.patch)
+router.delete("/:uid", userController.destroy)
+router.use("/:uid/settings", settingsRoute.router)
 
 //
 
