@@ -1,4 +1,5 @@
 import express from "express"
+import http from "http"
 import cors from "cors"
 import cookieParser from "cookie-parser"
 import logMiddleware from "@/middlewares/log.middleware.js"
@@ -6,6 +7,7 @@ import env from "@/config/env.config.js"
 import sequelizeBoot from "@/boot/sequelize.boot.js"
 import apiRoute from "@/routes/api.route.js"
 import adminBoot from "@/boot/admin.boot.js"
+import websocketService from "@/services/websocket.service.js"
 
 //
 
@@ -27,7 +29,7 @@ api.use("/api", apiRoute.router)
 await sequelizeBoot.boot()
 await adminBoot.boot()
 
-//
-
-// --- Server Ignition
-api.listen(env.port, env.host, () => console.info(`[Api]: Active on ${env.protocol}://${env.host}:${env.port}.`))
+// --- Websocket Server
+const server = http.createServer(api)
+server.on("upgrade", websocketService.connect)
+server.listen(env.port, env.host, () => console.log(`[Api]: Active on ${env.protocol}://${env.host}:${env.port}.`))
