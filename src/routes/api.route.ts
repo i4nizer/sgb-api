@@ -11,7 +11,16 @@ import thresholdRoute from "@/routes/threshold.route.js"
 //
 
 const router = express.Router()
-router.use(cors())
+
+const origin = [
+    "http://localhost",
+    "ionic://localhost",
+    "http://localhost:3000",
+    "capacitor://localhost",
+    "https://smart-germination-box.vercel.app",
+]
+router.use(cors({ origin, credentials: true }))
+
 router.use(express.json())
 router.use(express.urlencoded({ extended: true }))
 router.use(logMiddleware.log)
