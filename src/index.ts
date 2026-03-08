@@ -13,15 +13,7 @@ import adminBoot from "@/boot/admin.boot.js"
 const api = express()
 
 // --- Middlewares
-const origin = [
-    "http://localhost",
-    "ionic://localhost",
-    "http://localhost:3000",
-    "http://localhost:4000",
-    "capacitor://localhost",
-    "https://smart-germination-box.vercel.app",
-]
-api.use(cors({ origin, credentials: true }))
+api.use(cors({ origin: env.cors.origin, credentials: true }))
 api.use(cookieParser())
 api.use(express.json())
 api.use(express.urlencoded({ extended: true }))

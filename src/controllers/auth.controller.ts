@@ -30,7 +30,8 @@ const signIn: RequestHandler = async (req, res) => {
     res.cookie("token", token, {
         maxAge: 24 * 60 * 60 * 1000,
         httpOnly: true,
-        sameSite: "lax",
+        secure: true,
+        sameSite: "none",
     })
     
     res.send(payload)
