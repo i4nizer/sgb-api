@@ -7,6 +7,15 @@ import { UserSafeSchema, UserSignInSchema } from "@/schemas/user.schema.js"
 
 //
 
+const getMe: RequestHandler = async (req, res) => {
+    if (!req.user) return res.status(401).send("Authorization required.")
+    
+    const user = await User.findByPk(req.user.id, { raw: true })
+    if (!user) return res.status(404).send("User not found.")
+    
+    res.send(user)
+}
+
 const signIn: RequestHandler = async (req, res) => {
     const { data, error, success } = UserSignInSchema.safeParse(req.body)
     if (!success) return res.status(400).send(error.issues.at(0)?.message)
@@ -37,4 +46,4 @@ const signOut: RequestHandler = async (req, res) => {
 
 //
 
-export default { signIn, signOut }
+export default { getMe, signIn, signOut }
