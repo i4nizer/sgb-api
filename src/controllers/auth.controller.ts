@@ -38,7 +38,12 @@ const signIn: RequestHandler = async (req, res) => {
 }
 
 const signOut: RequestHandler = async (req, res) => {
-    res.clearCookie("token")
+    res.clearCookie("token", {
+        httpOnly: true,
+        secure: true,
+        sameSite: "none",
+    })
+
     res.status(204).send("User signed-out successfully.")
 }
 
