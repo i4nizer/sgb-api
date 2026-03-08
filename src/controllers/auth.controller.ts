@@ -26,7 +26,7 @@ const signIn: RequestHandler = async (req, res) => {
         sameSite: "none",
     })
     
-    res.send(user)
+    res.send(payload)
 }
 
 const signOut: RequestHandler = async (req, res) => {
