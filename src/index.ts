@@ -17,6 +17,7 @@ const origin = [
     "http://localhost",
     "ionic://localhost",
     "http://localhost:3000",
+    "http://localhost:4000",
     "capacitor://localhost",
     "https://smart-germination-box.vercel.app",
 ]
