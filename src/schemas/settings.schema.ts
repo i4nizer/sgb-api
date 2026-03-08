@@ -11,7 +11,11 @@ const SettingsSchema = z.object({
     updatedAt: z.coerce.date(),
 })
 
-const SettingsQuerySchema = SettingsSchema.partial()
+const SettingsQuerySchema = SettingsSchema
+    .omit({ sms: true, email: true })
+    .extend({ sms: z.boolean(), email: z.boolean() })
+    .partial()
+
 const SettingsCreateSchema = SettingsSchema.pick({ sms: true, email: true })
 const SettingsUpdateSchema = SettingsSchema.pick({ sms: true, email: true }).partial()
 

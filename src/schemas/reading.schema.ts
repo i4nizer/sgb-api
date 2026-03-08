@@ -12,7 +12,11 @@ const ReadingSchema = z.object({
     updatedAt: z.coerce.date(),
 })
 
-const ReadingQuerySchema = ReadingSchema.partial()
+const ReadingQuerySchema = ReadingSchema
+    .omit({ unit: true, icon: true })
+    .extend({ unit: z.string(), icon: z.string() })
+    .partial()
+
 const ReadingCreateSchema = ReadingSchema.pick({ name: true, unit: true, icon: true, value: true })
 const ReadingUpdateSchema = ReadingSchema.pick({ name: true, unit: true, icon: true, value: true }).partial()
 
