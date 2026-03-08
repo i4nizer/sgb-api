@@ -30,4 +30,10 @@ type ThresholdUpdateSchema = z.infer<typeof ThresholdUpdateSchema>
 
 //
 
-export { ThresholdSchema, ThresholdQuerySchema, ThresholdCreateSchema, ThresholdUpdateSchema }
+export {
+    ThresholdOp,
+    ThresholdSchema, 
+    ThresholdQuerySchema, 
+    ThresholdCreateSchema, 
+    ThresholdUpdateSchema,
+}

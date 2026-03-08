@@ -36,6 +36,7 @@ type UserUpdateSchema = z.infer<typeof UserUpdateSchema>
 //
 
 export {
+    UserRole,
     UserSchema, 
     UserSafeSchema, 
     UserQuerySchema, 
