@@ -31,6 +31,7 @@ const signIn: RequestHandler = async (req, res) => {
 
 const signOut: RequestHandler = async (req, res) => {
     if (!req.user) return res.status(401).send("Authorization is required.")
+    res.clearCookie("token")
     res.status(204).send("User signed-out successfully.")
 }
 
