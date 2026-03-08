@@ -8,6 +8,7 @@ import sequelizeBoot from "@/boot/sequelize.boot.js"
 import apiRoute from "@/routes/api.route.js"
 import adminBoot from "@/boot/admin.boot.js"
 import websocketService from "@/services/websocket.service.js"
+import supabaseBoot from "@/boot/supabase.boot.js"
 
 //
 
@@ -28,6 +29,7 @@ api.use("/api", apiRoute.router)
 // --- Bootstrapping
 await sequelizeBoot.boot()
 await adminBoot.boot()
+await supabaseBoot.boot()
 
 // --- Websocket Server
 const server = http.createServer(api)
