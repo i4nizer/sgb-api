@@ -18,7 +18,7 @@ const get: RequestHandler = async (req, res) => {
     const createdAt = { ...(alpha && { [Op.gte]: alpha }), ...(omega && { [Op.lte]: omega }) }
     if (Object.keys(createdAt).length) where.createdAt = createdAt
 
-    const thresholds = await Threshold.findAll({ where: data, raw: true, limit, offset })
+    const thresholds = await Threshold.findAll({ where, raw: true, limit, offset })
     res.send(thresholds)
 }
 

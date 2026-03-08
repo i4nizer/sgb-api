@@ -18,7 +18,7 @@ const get: RequestHandler = async (req, res) => {
     const createdAt = { ...(alpha && { [Op.gte]: alpha }), ...(omega && { [Op.lte]: omega }) }
     if (Object.keys(createdAt).length) where.createdAt = createdAt
 
-    const readings = await Reading.findAll({ where: data, raw: true, limit, offset })
+    const readings = await Reading.findAll({ where, raw: true, limit, offset })
     res.send(readings)
 }
 
