@@ -6,7 +6,12 @@ import { createClient } from '@supabase/supabase-js'
 // --- Instance
 const supabase = createClient(env.supabase.url, env.supabase.key)
 
-const connect = async () => await supabase.rpc("now")
+const connect = async () => {
+    return await supabase
+        .from("users")
+        .select("*")
+        .limit(1)
+}
 
 //
 
