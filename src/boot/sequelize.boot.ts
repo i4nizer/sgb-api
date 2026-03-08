@@ -12,7 +12,8 @@ import { User, userAttr, userOpts } from "@/models/user.model.js"
 const boot = async () => {
     const { user, pass, host, port, name, log, dialect } = env.database
     const url = `${dialect}://${user}:${pass}@${host}:${port}`
-    const sequelize = new Sequelize(`${url}/${name}`, { logging: log && console.log })
+    const pool = { max: 5, min: 0, acquire: 30000, idle: 10000, evict: 10000 }
+    const sequelize = new Sequelize(`${url}/${name}`, { pool, retry: { max: 5 }, logging: log && console.log })
 
     Capture.init(captureAttr, captureOpts(sequelize))
     Detection.init(detectionAttr, detectionOpts(sequelize))
