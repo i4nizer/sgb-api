@@ -19,7 +19,14 @@ const signIn: RequestHandler = async (req, res) => {
 
     const payload = UserSafeSchema.parse(user)
     const token = jwt.sign(payload, env.jwt.secret, { expiresIn: "1Day" })
-    res.send({ user: payload, token })
+    
+    res.cookie("token", token, {
+        maxAge: 24 * 60 * 60 * 1000,
+        httpOnly: true,
+        sameSite: "none",
+    })
+    
+    res.send(user)
 }
 
 const signOut: RequestHandler = async (req, res) => {
