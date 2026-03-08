@@ -1,5 +1,6 @@
 import express from "express"
 import cors from "cors"
+import cookieParser from "cookie-parser"
 import logMiddleware from "@/middlewares/log.middleware.js"
 import jwtMiddleware from "@/middlewares/jwt.middleware.js"
 import authRoute from "@/routes/auth.route.js"
@@ -21,6 +22,7 @@ const origin = [
 ]
 router.use(cors({ origin, credentials: true }))
 
+router.use(cookieParser())
 router.use(express.json())
 router.use(express.urlencoded({ extended: true }))
 router.use(logMiddleware.log)
