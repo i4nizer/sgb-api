@@ -8,8 +8,8 @@ const fcm = admin.messaging()
 
 //
 
-const connect = async (token: string = "") => {
-    return await fcm.send({ token, notification: { title: "FCM Test" } }, true)
+const connect = async () => {
+    return await fcm.send({ topic: "test", notification: { title: "FCM Test" } }, true)
 }
 
 //
