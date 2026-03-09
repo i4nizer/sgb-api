@@ -6,6 +6,7 @@ import { Reading, readingAttr, readingOpts } from "@/models/reading.model.js"
 import { Settings, settingsAttr, settingsOpts } from "@/models/settings.model.js"
 import { Threshold, thresholdAttr, thresholdOpts } from "@/models/threshold.model.js"
 import { User, userAttr, userOpts } from "@/models/user.model.js"
+import { Device, deviceAttr, deviceOpts } from "@/models/device.model.js"
 
 //
 
@@ -17,13 +18,16 @@ const boot = async () => {
 
     Capture.init(captureAttr, captureOpts(sequelize))
     Detection.init(detectionAttr, detectionOpts(sequelize))
+    Device.init(deviceAttr, deviceOpts(sequelize))
     Reading.init(readingAttr, readingOpts(sequelize))
     Settings.init(settingsAttr, settingsOpts(sequelize))
     Threshold.init(thresholdAttr, thresholdOpts(sequelize))
     User.init(userAttr, userOpts(sequelize))
 
+    User.hasMany(Device, { foreignKey: "userId", onDelete: "CASCADE" })
     Capture.hasMany(Detection, { foreignKey: "captureId", onDelete: "CASCADE" })
     Detection.belongsTo(Capture, { as: "capture", foreignKey: "captureId" })
+    Device.belongsTo(User, { as: "user", foreignKey: "userId" })
 
     await sequelize.authenticate()
     const { sync, alter, force } = env.database
