@@ -11,6 +11,7 @@ import type {
 
 class Threshold extends Model<InferAttributes<Threshold>, InferCreationAttributes<Threshold>> {
     declare id: CreationOptional<number>
+    declare icon: string
     declare value: number
     declare reading: string
     declare message: string
@@ -26,6 +27,10 @@ const thresholdAttr: ModelAttributes<Threshold, InferAttributes<Threshold>> = {
         type: DataTypes.INTEGER,
         primaryKey: true,
         autoIncrement: true,
+    },
+    icon: {
+        type: DataTypes.STRING,
+        allowNull: false,
     },
     value: {
         type: DataTypes.DECIMAL(10, 2),

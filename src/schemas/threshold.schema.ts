@@ -9,6 +9,7 @@ type ThresholdOp = (typeof ThresholdOp)[number]
 
 const ThresholdSchema = z.object({
     id: z.coerce.number().int(),
+    icon: z.string().default("mdi-water"),
     value: z.coerce.number(),
     reading: z.string(),
     message: z.string(),
@@ -17,7 +18,11 @@ const ThresholdSchema = z.object({
     updatedAt: z.coerce.date(),
 })
 
-const ThresholdQuerySchema = ThresholdSchema.partial()
+const ThresholdQuerySchema = ThresholdSchema
+    .omit({ icon: true })
+    .extend({ icon: z.string() })
+    .partial()
+
 const ThresholdCreateSchema = ThresholdSchema.omit({ id: true, createdAt: true, updatedAt: true })
 const ThresholdUpdateSchema = ThresholdSchema.omit({ id: true, createdAt: true, updatedAt: true }).partial()
 
