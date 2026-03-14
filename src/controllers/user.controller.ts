@@ -28,7 +28,7 @@ const post: RequestHandler = async (req, res) => {
     if (!success) return res.status(400).send(error.issues.at(0)?.message)
 
     const exists = await User.count({ where: { email: data.email } }) > 0
-    if (!exists) return res.status(400).send(`User email already in use.`)
+    if (exists) return res.status(400).send(`User email already in use.`)
 
     const hashed = await bcrypt.hash(data.password, 10)
     const user = await User.create({ ...data, password: hashed })
