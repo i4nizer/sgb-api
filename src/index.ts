@@ -10,6 +10,7 @@ import adminBoot from "@/boot/admin.boot.js"
 import websocketService from "@/services/websocket.service.js"
 import supabaseBoot from "@/boot/supabase.boot.js"
 import firebaseBoot from "@/boot/firebase.boot.js"
+import espBoot from "@/boot/esp.boot.js"
 
 //
 
@@ -32,6 +33,7 @@ await sequelizeBoot.boot()
 await adminBoot.boot()
 await supabaseBoot.boot()
 await firebaseBoot.boot()
+await espBoot.boot()
 
 // --- Websocket Server
 const server = http.createServer(api)
