@@ -45,7 +45,9 @@ const patch: RequestHandler = async (req, res) => {
     const user = await User.findByPk(uid)
     if (!user) return res.status(404).send("User not found.")
 
-    const hashed = data.password ? await bcrypt.hash(data.password, 10) : user?.password
+    const [oldPassword, newPassword] = [user.password, data.password]
+    const hashed = !!newPassword && newPassword != oldPassword ? await bcrypt.hash(newPassword, 10) : oldPassword
+    
     await user.update({ ...data, password: hashed })
     res.send(user.dataValues)
 }
