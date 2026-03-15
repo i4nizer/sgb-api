@@ -1,4 +1,5 @@
 import { Reading } from "@/models/reading.model.js"
+import thresholdOrchestrator from "@/orchestrators/threshold.orchestrator.js"
 import { PaginationSchema } from "@/schemas/pagination.schema.js"
 import { ReadingCreateSchema, ReadingQuerySchema, ReadingUpdateSchema } from "@/schemas/reading.schema.js"
 import { type RequestHandler } from "express"
@@ -28,6 +29,7 @@ const post: RequestHandler = async (req, res) => {
 
     const reading = await Reading.create(data)
     res.send(reading.dataValues)
+    await thresholdOrchestrator.evaluate(reading.dataValues)
 }
 
 const patch: RequestHandler = async (req, res) => {
