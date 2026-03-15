@@ -17,7 +17,7 @@ const evaluate = async (reading: ReadingSchema) => {
     
     const notifications = triggereds.map((t) => createNotification(ThresholdSchema.parse(t.dataValues)))
     const nprms = notifications.map((n) => firebaseService.fcm.sendEachForMulticast({ tokens, notification: n }))
-    await Promise.all(nprms).then((res) => console.table(res))
+    await Promise.all(nprms)
 }
 
 const isTriggered = (reading: ReadingSchema, threshold: ThresholdSchema) => {
