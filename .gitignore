@@ -11,3 +11,6 @@
 
 # Avoid OS Issues
 package-lock.json
+
+# Images
+public/images

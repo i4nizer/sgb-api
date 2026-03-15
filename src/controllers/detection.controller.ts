@@ -3,6 +3,8 @@ import { Detection } from "@/models/detection.model.js"
 import { PaginationSchema } from "@/schemas/pagination.schema.js"
 import { type RequestHandler } from "express"
 import { DetectionCreateSchema, DetectionQuerySchema, DetectionUpdateSchema } from "@/schemas/detection.schema.js"
+import detectionOrchestrator from "@/orchestrators/detection.orchestrator.js"
+import z from "zod"
 
 //
 
@@ -31,6 +33,7 @@ const post: RequestHandler = async (req, res) => {
 
     const detection = await Detection.create({ ...data, captureId: Number(cid) })
     res.send(detection.dataValues)
+    await detectionOrchestrator.evaluate([detection.dataValues])
 }
 
 const patch: RequestHandler = async (req, res) => {
@@ -59,4 +62,19 @@ const destroy: RequestHandler = async (req, res) => {
 
 //
 
-export default { get, post, patch, destroy }
+const postBulk: RequestHandler = async (req, res) => {
+    const cid = req.params.cid as string
+    if (!cid) return res.status(400).send("Capture id required.")
+
+    const { data, error, success } = z.array(DetectionCreateSchema).safeParse(req.body)
+    if (!success) return res.status(400).send(error.issues.at(0)?.message)
+
+    const datas = data.map((d) => ({ ...d, captureId: Number(cid) }))
+    const detections = await Detection.bulkCreate(datas)
+    res.send(detections)
+    await detectionOrchestrator.evaluate(detections)
+}
+
+//
+
+export default { get, post, patch, destroy, postBulk }
