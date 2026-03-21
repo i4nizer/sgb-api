@@ -5,6 +5,7 @@ import espWebsocket from "@/websockets/esp.websocket.js"
 
 const boot = async () => {
     await espWebsocket.subscribe("Reading", "Create", espHandler.onCreateReading)
+    await espWebsocket.subscribe("Threshold", "Retrieve", espHandler.onRetrieveThreshold)
     console.info("[Boot.Esp]: Websocket handlers attached.")
 }
 

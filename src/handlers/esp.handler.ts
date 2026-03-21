@@ -3,6 +3,9 @@ import { Reading } from "@/models/reading.model.js";
 import { ReadingCreateSchema } from "@/schemas/reading.schema.js";
 import appWebsocket from "@/websockets/app.websocket.js";
 import thresholdOrchestrator from "@/orchestrators/threshold.orchestrator.js";
+import { ThresholdUpdateSchema } from "@/schemas/threshold.schema.js";
+import { Threshold } from "@/models/threshold.model.js";
+import espWebsocket from "@/websockets/esp.websocket.js";
 
 //
 
@@ -16,6 +19,12 @@ const onCreateReading: WsEventHandler<ReadingCreateSchema> = async (data) => {
     await Promise.all(eprms)
 }
 
+const onRetrieveThreshold: WsEventHandler = async () => {
+    const thresholds = await Threshold.findAll({ raw: true })
+    const event: WsEvent = { name: "Threshold", query: "Update", data: thresholds }
+    await espWebsocket.broadcast(event)
+}
+
 //
 
-export default { onCreateReading }
+export default { onCreateReading, onRetrieveThreshold }
