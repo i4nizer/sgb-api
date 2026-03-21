@@ -3,6 +3,8 @@ import { Threshold } from "@/models/threshold.model.js"
 import { PaginationSchema } from "@/schemas/pagination.schema.js"
 import { type RequestHandler } from "express"
 import { ThresholdCreateSchema, ThresholdQuerySchema, ThresholdUpdateSchema } from "@/schemas/threshold.schema.js"
+import { WsEvent } from "@/schemas/ws.event.schema.js"
+import espWebsocket from "@/websockets/esp.websocket.js"
 
 //
 
@@ -28,6 +30,9 @@ const post: RequestHandler = async (req, res) => {
 
     const threshold = await Threshold.create(data)
     res.send(threshold.dataValues)
+
+    const event: WsEvent = { name: "Threshold", data: [threshold.dataValues], query: "Create" }
+    await espWebsocket.broadcast(event)
 }
 
 const patch: RequestHandler = async (req, res) => {
@@ -42,6 +47,9 @@ const patch: RequestHandler = async (req, res) => {
 
     await threshold.update(data)
     res.send(threshold.dataValues)
+
+    const event: WsEvent = { name: "Threshold", data: [threshold.dataValues], query: "Update" }
+    await espWebsocket.broadcast(event)
 }
 
 const destroy: RequestHandler = async (req, res) => {
