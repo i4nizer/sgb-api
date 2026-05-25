@@ -9,8 +9,11 @@
 # TypeScript build output
 /dist
 
-# Avoid OS Issues
+# Avoid OS Issuesg
 package-lock.json
 
 # Images
 public/images
+
+# Mds
+*.md
