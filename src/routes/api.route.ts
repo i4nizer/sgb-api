@@ -7,6 +7,7 @@ import readingRoute from "@/routes/reading.route.js"
 import thresholdRoute from "@/routes/threshold.route.js"
 import roleMiddleware from "@/middlewares/role.middleware.js"
 import deviceRoute from "@/routes/device.route.js"
+import faultRoute from "@/routes/fault.route.js"
 
 //
 
@@ -14,6 +15,7 @@ const router = express.Router()
 router.use("/auth", authRoute.router)
 router.use("/user", jwtMiddleware.requireAuthToken, roleMiddleware.requireUserRole("Admin"), userRoute.router)
 router.use("/device", jwtMiddleware.requireAuthToken, deviceRoute.router)
+router.use("/fault", jwtMiddleware.requireAuthToken, faultRoute.router)
 router.use("/capture", jwtMiddleware.requireAuthToken, captureRoute.router)
 router.use("/reading", jwtMiddleware.requireAuthToken, readingRoute.router)
 router.use("/threshold", jwtMiddleware.requireAuthToken, thresholdRoute.router)

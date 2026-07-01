@@ -1,0 +1,40 @@
+import { Device } from "@/models/device.model.js"
+import { Fault } from "@/models/fault.model.js"
+import { type FaultCreateSchema } from "@/schemas/fault.schema.js"
+import firebaseService from "@/services/firebase.service.js"
+import { Notification } from "firebase-admin/messaging"
+
+//
+
+const create = async (data: FaultCreateSchema) => {
+	const fault = await Fault.create(data)
+	await notifyUsers(fault.title, fault.message)
+	return fault
+}
+
+const notifyUsers = async (title: string, message: string) => {
+	const devices = await Device.findAll({ attributes: ["token"] })
+	const tokens = [...new Set(devices.map(d => d.token).filter(Boolean))]
+	if (!tokens.length) return
+
+	const chunks = chunk(tokens, 500)
+	const notification = createNotification(title, message)
+	const nprms = chunks.map(tokens => firebaseService.fcm.sendEachForMulticast({ tokens, notification }))
+	await Promise.all(nprms)
+}
+
+const chunk = <T>(items: T[], size: number) => {
+	const chunks: T[][] = []
+	for (let i = 0; i < items.length; i += size) chunks.push(items.slice(i, i + size))
+	return chunks
+}
+
+const createNotification = (title: string, message: string) =>
+	({
+		title,
+		body: message,
+	}) as Notification
+
+//
+
+export default { create, notifyUsers }
