@@ -9,24 +9,32 @@ import espWebsocket from "@/websockets/esp.websocket.js"
 
 //
 
-type NullableReadingCreateSchema = Omit<ReadingCreateSchema, "value"> & { value: number | null }
+const readingSensorMap = new Map<string, string>([
+	["Temperature", "DHT22"],
+	["Humidity", "DHT22"],
+	["Soil Moisture", "Soil Moisture Sensor"],
+])
 
 //
 
-const onCreateReading: WsEventHandler<NullableReadingCreateSchema> = async data => {
-	const faultReadings = data.filter(isNullValueReading)
-	const validReadings = data.filter(isValidValueReading)
+const onCreateReading: WsEventHandler<ReadingCreateSchema> = async data => {
+	// --- Handle Faulty Readings
+	const faults = data
+		.filter(r => r.value == null)
+		.map(r => ({ title: `${readingSensorMap.get(r.name)} Faulty`, message: `${readingSensorMap.get(r.name)} ${r.name} reading null.` }))
+	const fprms = faults.map(f => faultOrchestrator.create(f))
 
-	const fprms = faultReadings.map(createNullReadingFault)
-	const readings = validReadings.length ? await Reading.bulkCreate(validReadings) : []
-	const values = readings.map(r => r.dataValues)
+	// --- Handle Valid Readings
+	const readings = data.filter(r => r.value != null)
+	if (readings.length <= 0) return
+	const inserted = await Reading.bulkCreate(readings)
+	
+	// --- Emit
+	const values = inserted.map(i => i.dataValues)
+	const event: WsEvent = { name: "Reading", query: "Create", data: values }
+	await appWebsocket.broadcast(event)
 
-	if (values.length) {
-		const event: WsEvent = { name: "Reading", query: "Create", data: values }
-		await appWebsocket.broadcast(event)
-	}
-
-	const eprms = readings.map(r => thresholdOrchestrator.evaluate(r.dataValues))
+	const eprms = values.map(r => thresholdOrchestrator.evaluate(r))
 	await Promise.all([...eprms, ...fprms])
 }
 
@@ -34,17 +42,6 @@ const onRetrieveThreshold: WsEventHandler = async () => {
 	const thresholds = await Threshold.findAll({ raw: true })
 	const event: WsEvent = { name: "Threshold", query: "Update", data: thresholds }
 	await espWebsocket.broadcast(event)
-}
-
-const isNullValueReading = (reading: NullableReadingCreateSchema) => reading.value == null
-
-const isValidValueReading = (reading: NullableReadingCreateSchema): reading is ReadingCreateSchema =>
-	reading.value != null
-
-const createNullReadingFault = async (reading: NullableReadingCreateSchema) => {
-	const title = `${reading.name} Reading Fault`
-	const message = "DHT22 sensor reading is null."
-	return await faultOrchestrator.create({ title, message })
 }
 
 //
