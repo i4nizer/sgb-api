@@ -19,9 +19,11 @@ const readingSensorMap = new Map<string, string>([
 
 const onCreateReading: WsEventHandler<ReadingCreateSchema> = async data => {
 	// --- Handle Faulty Readings
-	const faults = data
-		.filter(r => r.value == null)
-		.map(r => ({ title: `${readingSensorMap.get(r.name)} Faulty`, message: `${readingSensorMap.get(r.name)} ${r.name} reading null.` }))
+	const faultyReadings = data.filter(r => r.value == null)
+	const faults = faultyReadings.map(r => ({
+		title: `${readingSensorMap.get(r.name)} Faulty`,
+		message: `${readingSensorMap.get(r.name)} ${r.name.toLowerCase()} reading null.`
+	}))
 	const fprms = faults.map(f => faultOrchestrator.create(f))
 
 	// --- Handle Valid Readings
