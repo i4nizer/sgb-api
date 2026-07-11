@@ -8,6 +8,7 @@ import thresholdRoute from "@/routes/threshold.route.js"
 import roleMiddleware from "@/middlewares/role.middleware.js"
 import deviceRoute from "@/routes/device.route.js"
 import faultRoute from "@/routes/fault.route.js"
+import versionController from "@/controllers/version.controller.js"
 
 //
 
@@ -19,6 +20,7 @@ router.use("/fault", jwtMiddleware.requireAuthToken, faultRoute.router)
 router.use("/capture", jwtMiddleware.requireAuthToken, captureRoute.router)
 router.use("/reading", jwtMiddleware.requireAuthToken, readingRoute.router)
 router.use("/threshold", jwtMiddleware.requireAuthToken, thresholdRoute.router)
+router.get("/version", versionController.get)
 
 //
 
