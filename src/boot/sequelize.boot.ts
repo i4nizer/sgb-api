@@ -1,5 +1,5 @@
 import env from "@/config/env.config.js"
-import { Sequelize } from "sequelize"
+import { Options, Sequelize } from "sequelize"
 import { Capture, captureAttr, captureOpts } from "@/models/capture.model.js"
 import { Detection, detectionAttr, detectionOpts } from "@/models/detection.model.js"
 import { Reading, readingAttr, readingOpts } from "@/models/reading.model.js"
@@ -12,10 +12,15 @@ import { Fault, faultAttr, faultOpts } from "@/models/fault.model.js"
 //
 
 const boot = async () => {
-	const { user, pass, host, port, name, log, dialect } = env.database
+	const { user, pass, host, port, log, name, dialect, certificate } = env.database
 	const url = `${dialect}://${user}:${pass}@${host}:${port}`
-	const pool = { max: 5, min: 0, acquire: 30000, idle: 10000, evict: 10000 }
-	const sequelize = new Sequelize(`${url}/${name}`, { pool, retry: { max: 5 }, logging: log && console.log })
+
+	const rawsqlize = new Sequelize(url, { logging: log && console.log })
+	await rawsqlize.query(`CREATE DATABASE IF NOT EXISTS \`${name}\`;`)
+	console.info("Database connected and checked.")
+
+	const options: Options = { ...(!!certificate && { dialectOptions: { ssl: { ca: certificate } } }) }
+	const sequelize = new Sequelize(`${url}/${name}`, { ...options, logging: log && console.log })
 
 	Capture.init(captureAttr, captureOpts(sequelize))
 	Detection.init(detectionAttr, detectionOpts(sequelize))

@@ -43,6 +43,7 @@ const env = {
 		alter: process.env.DATABASE_ALTER === "true",
 		force: process.env.DATABASE_FORCE === "true",
 		dialect: process.env.DATABASE_DIALECT || "",
+		certificate: process.env.DATABASE_CERTIFICATE || "",
 	},
 }
 
